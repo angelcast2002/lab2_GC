@@ -1,126 +1,212 @@
 #include <iostream>
-#include <fstream>
 #include <SDL.h>
-#include "src/framebuffer.h"
+#include "src/Renderer.h"
 
-void render() {
-    Framebuffer framebuffer(800, 600);
-    Color clearColor(0x00, 0x00, 0x00);
+const int WINDOW_WIDTH = 300;
+const int WINDOW_HEIGHT = 300;
+const int CELL_SIZE = 5;
+const int GRID_WIDTH = WINDOW_WIDTH / CELL_SIZE;
+const int GRID_HEIGHT = WINDOW_HEIGHT / CELL_SIZE;
+const int FRAME_DELAY = 100;
 
-    framebuffer.clear(clearColor);
+class GameOfLife {
+public:
 
-    // Poligono 1
-    Color fillColor(0xFF, 0xFF, 0x00);       // Color de relleno (amarillo)
-    Color borderColor(0xFF, 0xFF, 0xFF);     // Color de contorno (verde)
-    std::vector<Vertex> poligono1{
-            {165.0, 380.0},
-            {185.0, 360.0},
-            {180.0, 330.0},
-            {207.0, 345.0},
-            {233.0, 330.0},
-            {230.0, 360.0},
-            {250.0, 380.0},
-            {220.0, 385.0},
-            {205.0, 410.0},
-            {193.0, 383.0}
-    };
+    GameOfLife() : running(true), grid() {
+        // Patrón inicial: Stable "dirty" puffer train
+        int startX = 3;
+        int startY = GRID_HEIGHT / 2;
 
-    // Poligono 2
+        // Configurar el patrón inicial
+        grid[startX][startY] = true;
+        grid[startX + 1][startY] = true;
+        grid[startX + 2][startY - 1] = true;
+        grid[startX + 2][startY + 1] = true;
+        grid[startX + 3][startY - 1] = true;
+        grid[startX + 3][startY + 2] = true;
+        grid[startX + 4][startY - 1] = true;
+        grid[startX + 4][startY + 2] = true;
+        grid[startX + 5][startY] = true;
+        grid[startX + 6][startY] = true;
+        grid[startX + 7][startY] = true;
+        grid[startX + 8][startY] = true;
+        grid[startX + 9][startY] = true;
+        grid[startX + 10][startY - 1] = true;
+        grid[startX + 10][startY + 1] = true;
+        grid[startX + 11][startY - 1] = true;
+        grid[startX + 11][startY + 1] = true;
+        grid[startX + 12][startY] = true;
+        grid[startX + 13][startY] = true;
+        grid[startX + 14][startY] = true;
+        grid[startX + 15][startY] = true;
+        grid[startX + 16][startY] = true;
+        grid[startX + 17][startY - 1] = true;
+        grid[startX + 17][startY + 1] = true;
+        grid[startX + 18][startY - 1] = true;
+        grid[startX + 18][startY + 1] = true;
+        grid[startX + 19][startY] = true;
+        grid[startX + 20][startY] = true;
+        grid[startX + 21][startY] = true;
+        grid[startX + 22][startY] = true;
+        grid[startX + 23][startY] = true;
+        grid[startX + 24][startY - 1] = true;
+        grid[startX + 24][startY + 1] = true;
+        grid[startX + 25][startY - 1] = true;
+        grid[startX + 25][startY + 1] = true;
+        grid[startX + 26][startY] = true;
+        grid[startX + 27][startY] = true;
+        grid[startX + 28][startY] = true;
+        grid[startX + 50][startY] = true;
+    }
 
-    Color fillColor2(0, 0, 255);       // Relleno azul
-    Color borderColor2(255, 255, 255); // Borde blanco
-    std::vector<Vertex> vertices{
-            {321.0, 335.0},
-            {288.0, 286.0},
-            {339.0, 251.0},
-            {374.0, 302.0}
-    };
 
-    // Poligono 3
-    Color fillColor3(255, 0, 0);         // Relleno rojo
-    Color borderColor3(255, 255, 255);  // Borde blanco
-    std::vector<Vertex> poligono3{
-            {377.0, 249.0},
-            {411.0, 197.0},
-            {436.0, 249.0}
-    };
+    void run() {
+        initializeSDL();
 
-    // Poligono 4
-    Color fillColor4(0, 255, 0);         // Relleno verde
-    Color borderColor4(255, 255, 255);  // Borde blanco
-    std::vector<Vertex> poligono4{
-            {413.0, 177.0},
-            {448.0, 159.0},
-            {502.0, 88.0},
-            {553.0, 53.0},
-            {535.0, 36.0},
-            {676.0, 37.0},
-            {660.0, 52.0},
-            {750.0, 145.0},
-            {761.0, 179.0},
-            {672.0, 192.0},
-            {659.0, 214.0},
-            {615.0, 214.0},
-            {632.0, 230.0},
-            {580.0, 230.0},
-            {597.0, 215.0},
-            {552.0, 214.0},
-            {517.0, 144.0},
-            {466.0, 180.0}
-    };
+        SDL_Window* window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+        Renderer renderer(window);
 
-    // Poligono 5
-    Color borderColor5(255, 255, 255);  // Borde blanco
-    std::vector<Vertex> poligono5{
-            {682.0, 175.0},
-            {708.0, 120.0},
-            {735.0, 148.0},
-            {739.0, 170.0}
-    };
+        while (running) {
+            handleEvents();
 
-    framebuffer.drawPolygon(poligono1, fillColor, borderColor);
-    framebuffer.drawPolygon(vertices, fillColor2, borderColor2);
-    framebuffer.drawPolygon(poligono3, fillColor3, borderColor3);
-    framebuffer.drawPolygon(poligono4, fillColor4, borderColor4);
-    framebuffer.drawPolygon(poligono5, clearColor, borderColor5);
-
-    framebuffer.renderBuffer();
-}
-
-int main() {
-    SDL_Init(SDL_INIT_EVERYTHING);
-
-    SDL_Window* window = SDL_CreateWindow("life", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(
-            window,
-            -1,
-            SDL_RENDERER_ACCELERATED
-    );
-
-    bool running = true;
-    SDL_Event event;
-
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
+            if (running) {
+                updateState();
+                renderScene(renderer);
+                SDL_Delay(FRAME_DELAY);
             }
         }
 
-        // Call our render function
-        render(renderer);
-
-        // Present the frame buffer to the screen
-        SDL_RenderPresent(renderer);
-
-        // Delay to limit the frame rate
-        SDL_Delay(1000 / 60);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
     }
 
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+private:
+    bool running;
+    bool grid[GRID_WIDTH][GRID_HEIGHT];
+
+    void initializeSDL() {
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+            std::cout << "Failed to initialize SDL: " << SDL_GetError() << std::endl;
+            exit(1);
+        }
+    }
+
+    void handleEvents() {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            } else if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    running = false;
+                }
+            }
+        }
+    }
+
+    void updateState() {
+        bool newGrid[GRID_WIDTH][GRID_HEIGHT];
+
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            for (int y = 0; y < GRID_HEIGHT; ++y) {
+                int liveNeighbors = countLiveNeighbors(x, y);
+
+                if (grid[x][y]) {
+                    // Cell is alive
+                    if (liveNeighbors < 2 || liveNeighbors > 3) {
+                        // Cell dies due to underpopulation or overpopulation
+                        newGrid[x][y] = false;
+                    } else {
+                        // Cell survives
+                        newGrid[x][y] = true;
+                    }
+                } else {
+                    // Cell is dead
+                    if (liveNeighbors == 3) {
+                        // Cell becomes alive due to reproduction
+                        newGrid[x][y] = true;
+                    } else {
+                        // Cell remains dead
+                        newGrid[x][y] = false;
+                    }
+                }
+            }
+        }
+
+        // Update the grid
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            for (int y = 0; y < GRID_HEIGHT; ++y) {
+                grid[x][y] = newGrid[x][y];
+            }
+        }
+    }
+
+    int countLiveNeighbors(int x, int y) {
+        int count = 0;
+
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                if (dx == 0 && dy == 0) {
+                    continue;  // Skip the current cell
+                }
+
+                int nx = x + dx;
+                int ny = y + dy;
+
+                // Wrap around the grid edges
+                if (nx < 0) {
+                    nx = GRID_WIDTH - 1;
+                } else if (nx >= GRID_WIDTH) {
+                    nx = 0;
+                }
+
+                if (ny < 0) {
+                    ny = GRID_HEIGHT - 1;
+                } else if (ny >= GRID_HEIGHT) {
+                    ny = 0;
+                }
+
+                if (grid[nx][ny]) {
+                    ++count;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    void renderScene(Renderer& renderer) {
+        SDL_Renderer* sdlRenderer = renderer.getRenderer();
+        SDL_SetRenderDrawColor(sdlRenderer, 128, 0, 128, 255);
+        SDL_RenderClear(sdlRenderer);
+
+        SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
+
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            for (int y = 0; y < GRID_HEIGHT; ++y) {
+                if (grid[x][y]) {
+                    int px = x * CELL_SIZE;
+                    int py = y * CELL_SIZE;
+                    point(sdlRenderer, px, py, CELL_SIZE);
+                }
+            }
+        }
+
+        renderer.present();
+    }
+
+    void point(SDL_Renderer* renderer, int x, int y, int size) {
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                SDL_RenderDrawPoint(renderer, x + i, y + j);
+            }
+        }
+    }
+};
+
+int main(int argc, char* argv[]) {
+    GameOfLife game;
+    game.run();
 
     return 0;
 }
