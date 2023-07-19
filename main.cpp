@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include "src/Renderer.h"
 
-const int WINDOW_WIDTH = 300;
-const int WINDOW_HEIGHT = 300;
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
 const int CELL_SIZE = 5;
 const int GRID_WIDTH = WINDOW_WIDTH / CELL_SIZE;
 const int GRID_HEIGHT = WINDOW_HEIGHT / CELL_SIZE;
@@ -13,50 +13,47 @@ class GameOfLife {
 public:
 
     GameOfLife() : running(true), grid() {
-        // Patrón inicial: Stable "dirty" puffer train
-        int startX = 3;
-        int startY = GRID_HEIGHT / 2;
+        int startX = 1;
+        int startY = 1;
 
-        // Configurar el patrón inicial
-        grid[startX][startY] = true;
-        grid[startX + 1][startY] = true;
-        grid[startX + 2][startY - 1] = true;
-        grid[startX + 2][startY + 1] = true;
-        grid[startX + 3][startY - 1] = true;
-        grid[startX + 3][startY + 2] = true;
-        grid[startX + 4][startY - 1] = true;
-        grid[startX + 4][startY + 2] = true;
-        grid[startX + 5][startY] = true;
-        grid[startX + 6][startY] = true;
-        grid[startX + 7][startY] = true;
-        grid[startX + 8][startY] = true;
-        grid[startX + 9][startY] = true;
-        grid[startX + 10][startY - 1] = true;
-        grid[startX + 10][startY + 1] = true;
-        grid[startX + 11][startY - 1] = true;
-        grid[startX + 11][startY + 1] = true;
-        grid[startX + 12][startY] = true;
-        grid[startX + 13][startY] = true;
-        grid[startX + 14][startY] = true;
-        grid[startX + 15][startY] = true;
-        grid[startX + 16][startY] = true;
-        grid[startX + 17][startY - 1] = true;
-        grid[startX + 17][startY + 1] = true;
-        grid[startX + 18][startY - 1] = true;
-        grid[startX + 18][startY + 1] = true;
-        grid[startX + 19][startY] = true;
-        grid[startX + 20][startY] = true;
-        grid[startX + 21][startY] = true;
-        grid[startX + 22][startY] = true;
-        grid[startX + 23][startY] = true;
-        grid[startX + 24][startY - 1] = true;
+// Configurar el patrón inicial (Conway's Glider Gun)
+        grid[startX + 24][startY + 0] = true;
+        grid[startX + 22][startY + 1] = true;
         grid[startX + 24][startY + 1] = true;
-        grid[startX + 25][startY - 1] = true;
-        grid[startX + 25][startY + 1] = true;
-        grid[startX + 26][startY] = true;
-        grid[startX + 27][startY] = true;
-        grid[startX + 28][startY] = true;
-        grid[startX + 50][startY] = true;
+        grid[startX + 12][startY + 2] = true;
+        grid[startX + 13][startY + 2] = true;
+        grid[startX + 20][startY + 2] = true;
+        grid[startX + 21][startY + 2] = true;
+        grid[startX + 34][startY + 2] = true;
+        grid[startX + 35][startY + 2] = true;
+        grid[startX + 11][startY + 3] = true;
+        grid[startX + 15][startY + 3] = true;
+        grid[startX + 20][startY + 3] = true;
+        grid[startX + 21][startY + 3] = true;
+        grid[startX + 34][startY + 3] = true;
+        grid[startX + 35][startY + 3] = true;
+        grid[startX + 0][startY + 4] = true;
+        grid[startX + 1][startY + 4] = true;
+        grid[startX + 10][startY + 4] = true;
+        grid[startX + 16][startY + 4] = true;
+        grid[startX + 20][startY + 4] = true;
+        grid[startX + 21][startY + 4] = true;
+        grid[startX + 0][startY + 5] = true;
+        grid[startX + 1][startY + 5] = true;
+        grid[startX + 10][startY + 5] = true;
+        grid[startX + 14][startY + 5] = true;
+        grid[startX + 16][startY + 5] = true;
+        grid[startX + 17][startY + 5] = true;
+        grid[startX + 22][startY + 5] = true;
+        grid[startX + 24][startY + 5] = true;
+        grid[startX + 10][startY + 6] = true;
+        grid[startX + 16][startY + 6] = true;
+        grid[startX + 24][startY + 6] = true;
+        grid[startX + 11][startY + 7] = true;
+        grid[startX + 15][startY + 7] = true;
+        grid[startX + 12][startY + 8] = true;
+        grid[startX + 13][startY + 8] = true;
+
     }
 
 
@@ -177,7 +174,7 @@ private:
 
     void renderScene(Renderer& renderer) {
         SDL_Renderer* sdlRenderer = renderer.getRenderer();
-        SDL_SetRenderDrawColor(sdlRenderer, 128, 0, 128, 255);
+        SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
         SDL_RenderClear(sdlRenderer);
 
         SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
