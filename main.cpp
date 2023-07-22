@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL.h>
+#include <ctime>
 #include "src/Renderer.h"
 
 const int WINDOW_WIDTH = 800;
@@ -16,43 +17,108 @@ public:
         int startX = 1;
         int startY = 1;
 
-// Configurar el patrón inicial (Conway's Glider Gun)
-        grid[startX + 24][startY + 0] = true;
-        grid[startX + 22][startY + 1] = true;
-        grid[startX + 24][startY + 1] = true;
-        grid[startX + 12][startY + 2] = true;
-        grid[startX + 13][startY + 2] = true;
-        grid[startX + 20][startY + 2] = true;
-        grid[startX + 21][startY + 2] = true;
-        grid[startX + 34][startY + 2] = true;
-        grid[startX + 35][startY + 2] = true;
-        grid[startX + 11][startY + 3] = true;
-        grid[startX + 15][startY + 3] = true;
-        grid[startX + 20][startY + 3] = true;
-        grid[startX + 21][startY + 3] = true;
-        grid[startX + 34][startY + 3] = true;
-        grid[startX + 35][startY + 3] = true;
-        grid[startX + 0][startY + 4] = true;
+        // Configurar el patrón inicial (Conway's Glider Gun) en la esquina superior izquierda
+        grid[startX + 1][startY + 0] = true;
+        grid[startX + 2][startY + 0] = true;
+        grid[startX + 3][startY + 0] = true;
         grid[startX + 1][startY + 4] = true;
-        grid[startX + 10][startY + 4] = true;
-        grid[startX + 16][startY + 4] = true;
-        grid[startX + 20][startY + 4] = true;
-        grid[startX + 21][startY + 4] = true;
-        grid[startX + 0][startY + 5] = true;
-        grid[startX + 1][startY + 5] = true;
-        grid[startX + 10][startY + 5] = true;
-        grid[startX + 14][startY + 5] = true;
-        grid[startX + 16][startY + 5] = true;
-        grid[startX + 17][startY + 5] = true;
-        grid[startX + 22][startY + 5] = true;
-        grid[startX + 24][startY + 5] = true;
-        grid[startX + 10][startY + 6] = true;
-        grid[startX + 16][startY + 6] = true;
-        grid[startX + 24][startY + 6] = true;
-        grid[startX + 11][startY + 7] = true;
-        grid[startX + 15][startY + 7] = true;
-        grid[startX + 12][startY + 8] = true;
-        grid[startX + 13][startY + 8] = true;
+        grid[startX + 2][startY + 4] = true;
+        grid[startX + 3][startY + 4] = true;
+        grid[startX + 0][startY + 1] = true;
+        grid[startX + 0][startY + 2] = true;
+        grid[startX + 0][startY + 3] = true;
+        grid[startX + 4][startY + 1] = true;
+        grid[startX + 4][startY + 2] = true;
+        grid[startX + 4][startY + 3] = true;
+
+        // Configurar el patrón "Pulsar" en la esquina superior derecha
+        startX = GRID_WIDTH - 15;
+        startY = 1;
+
+        grid[startX + 1][startY + 0] = true;
+        grid[startX + 2][startY + 0] = true;
+        grid[startX + 3][startY + 0] = true;
+        grid[startX + 7][startY + 0] = true;
+        grid[startX + 8][startY + 0] = true;
+        grid[startX + 9][startY + 0] = true;
+        grid[startX + 0][startY + 1] = true;
+        grid[startX + 5][startY + 1] = true;
+        grid[startX + 7][startY + 1] = true;
+        grid[startX + 9][startY + 1] = true;
+        grid[startX + 14][startY + 1] = true;
+        grid[startX + 0][startY + 2] = true;
+        grid[startX + 5][startY + 2] = true;
+        grid[startX + 7][startY + 2] = true;
+        grid[startX + 9][startY + 2] = true;
+        grid[startX + 14][startY + 2] = true;
+        grid[startX + 1][startY + 3] = true;
+        grid[startX + 2][startY + 3] = true;
+        grid[startX + 3][startY + 3] = true;
+        grid[startX + 7][startY + 3] = true;
+        grid[startX + 8][startY + 3] = true;
+        grid[startX + 9][startY + 3] = true;
+
+        // Configurar el patrón "Pulsar" en la esquina inferior izquierda
+        startX = 1;
+        startY = GRID_HEIGHT - 5;
+
+        grid[startX + 1][startY + 0] = true;
+        grid[startX + 2][startY + 0] = true;
+        grid[startX + 3][startY + 0] = true;
+        grid[startX + 1][startY + 4] = true;
+        grid[startX + 2][startY + 4] = true;
+        grid[startX + 3][startY + 4] = true;
+        grid[startX + 0][startY + 1] = true;
+        grid[startX + 0][startY + 2] = true;
+        grid[startX + 0][startY + 3] = true;
+        grid[startX + 4][startY + 1] = true;
+        grid[startX + 4][startY + 2] = true;
+        grid[startX + 4][startY + 3] = true;
+
+        // Configurar el patrón "Pulsar" en la esquina inferior derecha
+        startX = GRID_WIDTH - 5;
+        startY = GRID_HEIGHT - 5;
+
+        grid[startX + 1][startY + 0] = true;
+        grid[startX + 2][startY + 0] = true;
+        grid[startX + 3][startY + 0] = true;
+        grid[startX + 1][startY + 4] = true;
+        grid[startX + 2][startY + 4] = true;
+        grid[startX + 3][startY + 4] = true;
+        grid[startX + 0][startY + 1] = true;
+        grid[startX + 0][startY + 2] = true;
+        grid[startX + 0][startY + 3] = true;
+        grid[startX + 4][startY + 1] = true;
+        grid[startX + 4][startY + 2] = true;
+        grid[startX + 4][startY + 3] = true;
+
+        // Configurar el patrón "Pulsar" en el centro del tablero
+        startX = GRID_WIDTH / 2 - 2;
+        startY = GRID_HEIGHT / 2 - 2;
+
+        grid[startX + 1][startY + 0] = true;
+        grid[startX + 2][startY + 0] = true;
+        grid[startX + 3][startY + 0] = true;
+        grid[startX + 1][startY + 4] = true;
+        grid[startX + 2][startY + 4] = true;
+        grid[startX + 3][startY + 4] = true;
+        grid[startX + 0][startY + 1] = true;
+        grid[startX + 0][startY + 2] = true;
+        grid[startX + 0][startY + 3] = true;
+        grid[startX + 4][startY + 1] = true;
+        grid[startX + 4][startY + 2] = true;
+        grid[startX + 4][startY + 3] = true;
+
+        std::srand(static_cast<unsigned>(std::time(0)));
+
+        // Configurar el patrón inicial aleatorio
+        for (int x = 0; x < GRID_WIDTH; ++x) {
+            for (int y = 0; y < GRID_HEIGHT; ++y) {
+                // Generar un número aleatorio entre 0 y 1
+                int randomValue = std::rand() % 2;
+                grid[x][y] = (randomValue == 1);
+            }
+        }
 
     }
 
